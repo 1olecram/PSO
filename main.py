@@ -54,9 +54,18 @@ def main():
                 global_best_score = score
                 global_best_position = np.copy(particle.position)
                 
-        # Movimentação (atualização de velocidade e posição)
-        for particle in swarm:
-            particle.update_velocity(global_best_position, c1, c2, w)
+        # Movimentação (atualização de velocidade e posição com Lbest em anel)
+        for i, particle in enumerate(swarm):
+            # Encontra os vizinhos da partícula atual (simulacao matematica da topologia de rede circular/anel)
+            left_neighbor = swarm[(i - 1) % num_particles]
+            right_neighbor = swarm[(i + 1) % num_particles]
+            
+            # Compara pbest da partícula com o pbest dos vizinhos para achar o lbest
+            neighborhood = [particle, left_neighbor, right_neighbor]
+            best_neighbor = min(neighborhood, key=lambda p: p.best_score)
+            local_best_position = best_neighbor.best_position
+            
+            particle.update_velocity(local_best_position, c1, c2, w)
             particle.update_position(bounds)
 
     print(f"\n--- Resultado Final após {iter_max} iterações ---")
