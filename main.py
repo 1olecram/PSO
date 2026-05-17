@@ -21,8 +21,8 @@ def main():
 
     n = 2 # Dimensões do problema
     bounds = (-5.12, 5.12) # Limites do problema
-    c1 = 2
-    c2 = 2
+    c1 = 2.05
+    c2 = 2.05
         
     # Inicializando o Enxame (Swarm)
     num_particles = 30
