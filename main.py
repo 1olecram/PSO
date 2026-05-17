@@ -10,6 +10,13 @@ def rastrigin(x, n, bounds):
     x = np.clip(x, bounds[0], bounds[1])
     return 10 * n + np.sum(x**2 - 10 * np.cos(2 * np.pi * x), axis=-1)
 
+def weighting_inertia(i, w_max =0.9, w_min = 0.4, iter_max = 100):
+    """
+    Calcula o valor do parâmetro de inércia (w) para a iteração atual.
+    Decaimento linear de w_max para w_min ao longo das iterações.
+    """
+    return w_max - i/iter_max * (w_max - w_min)
+
 def main():
 
     n = 2 # Dimensões do problema
