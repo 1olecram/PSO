@@ -17,3 +17,14 @@ class Particle:
         
         # Pontuação atual
         self.score = float('inf')
+
+    def update_velocity(self, global_best_position, c1, c2, w):
+        cognitive_component = c1 * np.random.uniform(0, 1) * (self.best_position - self.position)
+        social_component = c2 * np.random.uniform(0, 1) * (global_best_position - self.position)
+        self.velocity = w * self.velocity + cognitive_component + social_component
+    
+    def update_position(self, bounds):
+        self.position = self.position + self.velocity
+        self.position = np.clip(self.position, bounds[0], bounds[1]) # Limita as posições dentro dos limites do problema (tudo abaxio de 
+                                                                     # -5.12 vira -5.12 e tudo acima de 5.12 vira 5.12)
+    
