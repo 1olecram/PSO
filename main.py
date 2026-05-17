@@ -1,9 +1,10 @@
+from Particle import Particle
 import numpy as np
 
 def rastrigin(x, n, bounds):
     """
-    Evaluates the Rastrigin function for an n-dimensional array x.
-    The global minimum is at x = [0, 0, ..., 0] with a value of 0.
+    Avalia a função Rastrigin para um array x de n dimensões.
+    O mínimo global está em x = [0, 0, ..., 0] com um valor de 0.
     """
     x = np.atleast_1d(x)
     x = np.clip(x, bounds[0], bounds[1])
@@ -11,25 +12,22 @@ def rastrigin(x, n, bounds):
 
 
 def main():
-    # Configurações do problema
-    n = 2
-    bounds = (-5.12, 5.12)
+
+    n = 2 # Dimensões do problema
+    bounds = (-5.12, 5.12) # Limites do problema
     
     print(f"Preparando PSO para a função Rastrigin com n={n} e limites {bounds}")
-    
-    # Testando a função Rastrigin (fitness)
-    print("\n--- Testes da Função Rastrigin ---")
-    test_points = [
-        np.array([0.0, 0.0]),         # Mínimo global (resultado esperado: 0.0)
-        np.array([-3.12, 3.12]),       # Extremos do limite
-        np.array([6.0, -10.0]),       # Fora dos limites (será clipado para 5.12, -5.12)
-    ]
-    
-    for pt in test_points:
-        fitness = rastrigin(pt, n, bounds)
-        print(f"Ponto: {pt} -> Fitness = {fitness:.4f}")
         
-    # TODO: Implementar algoritmo PSO
+    # Inicializando o Enxame (Swarm)
+    num_particles = 30
+    swarm = [Particle(n, bounds) for _ in range(num_particles)]
+    
+    print(f"\n--- Estrutura do PSO ---")
+    print(f"Enxame criado com {len(swarm)} partículas.")
+    print(f"Partícula 3 - Posição inicial: {swarm[3].position}")
+    print(f"Partícula 3 - Velocidade inicial: {swarm[3].velocity}")
+
+    # TODO: Implementar o laço de evolução do PSO (avaliação, atualização de pbest/gbest e movimentação)
 
 if __name__ == "__main__":
     main()
