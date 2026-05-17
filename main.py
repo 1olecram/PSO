@@ -36,7 +36,39 @@ def main():
     print(f"Partícula 3 - Posição inicial: {swarm[3].position}")
     print(f"Partícula 3 - Velocidade inicial: {swarm[3].velocity}")
 
-    # TODO: Implementar o laço de evolução do PSO (avaliação, atualização de pbest/gbest e movimentação)
+    # Inicializa o gbest
+    global_best_position = np.zeros(n)
+    global_best_score = float('inf')
 
+    iter_max = 100
+    
+    # Laço de evolução do PSO
+    for i in range(iter_max):
+        w = weighting_inertia(i, iter_max=iter_max)
+        
+        # Avaliação e atualização de pbest e gbest
+        for particle in swarm:
+            # Avalia a função Rastrigin
+            score = rastrigin(particle.position, n, bounds)
+            particle.score = score
+            
+            # Atualiza o best position (pbest)
+            if score < particle.best_score:
+                particle.best_score = score
+                particle.best_position = np.copy(particle.position)
+                
+            # Atualiza o global best position (gbest)
+            if score < global_best_score:
+                global_best_score = score
+                global_best_position = np.copy(particle.position)
+                
+        # Movimentação (atualização de velocidade e posição)
+        for particle in swarm:
+            particle.update_velocity(global_best_position, c1, c2, w)
+            particle.update_position(bounds)
+
+    print(f"\n--- Resultado Final após {iter_max} iterações ---")
+    print(f"Melhor pontuação (gbest_score): {global_best_score}")
+    print(f"Melhor posição (gbest_position): {global_best_position}")
 if __name__ == "__main__":
     main()
