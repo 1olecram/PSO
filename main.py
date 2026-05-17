@@ -10,11 +10,13 @@ def rastrigin(x, n, bounds):
     x = np.clip(x, bounds[0], bounds[1])
     return 10 * n + np.sum(x**2 - 10 * np.cos(2 * np.pi * x), axis=-1)
 
-
 def main():
 
     n = 2 # Dimensões do problema
     bounds = (-5.12, 5.12) # Limites do problema
+    c1 = 2
+    c2 = 2
+    
     
     print(f"Preparando PSO para a função Rastrigin com n={n} e limites {bounds}")
         
