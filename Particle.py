@@ -19,7 +19,7 @@ class Particle:
         self.score = float('inf')
 
     def update_velocity(self, local_best_position, c1, c2, w):
-        cognitive_component = c1 * np.random.uniform(0, 1) * (self.best_position - self.position)
+        cognitive_component = c1 * np.random.uniform(0, 1, len(self.position)) * (self.best_position - self.position)
         social_component = c2 * np.random.uniform(0, 1) * (local_best_position - self.position)
         # calculo da velocidade usando o fator de constrição, que nao possui o parametro w(inercia)
         self.velocity = self.constriction_factor(c1, c2) * (self.velocity + cognitive_component + social_component)
