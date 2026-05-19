@@ -7,7 +7,7 @@ def rastrigin(x, n, bounds):
     O mínimo global está em x = [0, 0, ..., 0] com um valor de 0.
     """
     x = np.atleast_1d(x)
-    x = np.clip(x, bounds[0], bounds[1]) # limitar posição dentro dos limites do problema (tudo abaixo de -5.12 vira -5.12 e tudo acima de 5.12 vira 5.12)
+    x = np.clip(x, bounds[0], bounds[1])  # Mantém a posição dentro dos limites do problema.
     return 10 * n + np.sum(x**2 - 10 * np.cos(2 * np.pi * x), axis=-1)
 
 def weighting_inertia(i, w_max =0.9, w_min = 0.4, iter_max = 100):
@@ -19,48 +19,48 @@ def weighting_inertia(i, w_max =0.9, w_min = 0.4, iter_max = 100):
 
 def main():
 
-    n = 2 # Dimensões do problema
-    bounds = (-5.12, 5.12) # Limites do problema
+    n = 2  # Dimensões do problema
+    bounds = (-5.12, 5.12)  # Limites do problema
     c1 = 2.05
     c2 = 2.05
         
-    # Inicializando o Enxame (Swarm)
+    # Inicializa o enxame.
     num_particles = 30
     swarm = [Particle(n, bounds) for _ in range(num_particles)]
 
-    # Inicializa o gbest
+    # Inicializa o melhor global.
     global_best_position = np.zeros(n)
     global_best_score = float('inf')
 
     iter_max = 100
     
-    # Laço de evolução do PSO
+    # Laço principal de evolução do PSO.
     for i in range(iter_max):
         w = weighting_inertia(i, iter_max=iter_max)
         
-        # Avaliação e atualização de pbest e gbest
+        # Avalia as partículas e atualiza pbest e gbest.
         for particle in swarm:
-            # Avalia a função Rastrigin
+            # Calcula a função objetivo.
             score = rastrigin(particle.position, n, bounds)
             particle.score = score
             
-            # Atualiza o best position (pbest)
+            # Atualiza o melhor individual.
             if score < particle.best_score:
                 particle.best_score = score
                 particle.best_position = np.copy(particle.position)
                 
-            # Atualiza o global best position (gbest)
+            # Atualiza o melhor global.
             if score < global_best_score:
                 global_best_score = score
                 global_best_position = np.copy(particle.position)
                 
-        # Movimentação (atualização de velocidade e posição com Lbest em anel)
+        # Atualiza velocidade e posição usando topologia em anel com lbest.
         for i, particle in enumerate(swarm):
-            # Encontra os vizinhos da partícula atual (simulacao matematica da topologia de rede circular/anel)
+            # Obtém os vizinhos imediato esquerdo e direito.
             left_neighbor = swarm[(i - 1) % num_particles]
             right_neighbor = swarm[(i + 1) % num_particles]
             
-            # Compara pbest da partícula com o pbest dos vizinhos para achar o lbest
+            # Seleciona o melhor pbest da vizinhança.
             neighborhood = [particle, left_neighbor, right_neighbor]
             best_neighbor = min(neighborhood, key=lambda p: p.best_score)
             local_best_position = best_neighbor.best_position

@@ -20,14 +20,14 @@ def gerar_videos_pso():
     num_particles = 30
     iter_max = 100
 
-    # A lista de parâmetros que o professor pediu:
+    # Lista de parâmetros solicitada.
     pares_parametros = [[0, 1], [1, 0], [1, 1], [1, 0.1], [2, 2], [4, 4]]
 
     for c1, c2 in pares_parametros:
-        print(f"\n--- A simular C1={c1}, C2={c2} (Topologia em Anel) ---")
+        print(f"\n--- A simular C1={c1}, C2={c2} (Guiado por GBest) ---")
         swarm = [Particle(n, bounds) for _ in range(num_particles)]
         
-        # Inicializa o gbest que será usado para guiar as partículas
+        # Inicializa o melhor global usado para guiar as partículas.
         global_best_position = np.zeros(n)
         global_best_score = float('inf')
         history = []
@@ -35,7 +35,7 @@ def gerar_videos_pso():
         for it in range(iter_max):
             posicoes_atuais = []
             
-            # 1. Fase de Avaliação
+            # 1. Fase de avaliação.
             for particle in swarm:
                 score = rastrigin(particle.position, n, bounds)
                 particle.score = score
@@ -52,13 +52,13 @@ def gerar_videos_pso():
                 
             history.append(posicoes_atuais)
 
-            # 2. Fase de Movimento (guiada pelo melhor global)
+            # 2. Fase de movimento guiada pelo melhor global.
             for i, particle in enumerate(swarm):
-                # A partícula é guiada pelo melhor global do enxame.
+                # Atualiza a partícula com base no melhor global do enxame.
                 particle.update_velocity(global_best_position, c1, c2, w=0.7)
                 particle.update_position(bounds)
 
-        # --- Geração do Gráfico e Animação ---
+        # --- Geração do gráfico e da animação ---
         fig, ax = plt.subplots(figsize=(8, 6))
         X = np.linspace(bounds[0], bounds[1], 100)
         Y = np.linspace(bounds[0], bounds[1], 100)
@@ -73,22 +73,22 @@ def gerar_videos_pso():
         ax.set_xlim(bounds[0], bounds[1])
         ax.set_ylim(bounds[0], bounds[1])
         
-        # Legenda travada no canto para não pular
+        # Mantém a legenda fixa no canto.
         ax.legend(loc='upper right', bbox_to_anchor=(1, 1))
 
         def update(frame_number):
             posicoes = history[frame_number]
             scatter.set_offsets(posicoes)
             
-            # Título travado com casas decimais fixas para não tremer
-            ax.set_title(f"Anel | Iteração: {frame_number + 1:03d}/100 | C1={c1:.1f}, C2={c2:.1f}", 
+            # Mantém o título estável entre quadros.
+            ax.set_title(f"GBest | Iteração: {frame_number + 1:03d}/100 | C1={c1:.1f}, C2={c2:.1f}", 
                          pad=20, fontsize=12, fontweight='bold')
             return scatter,
 
         anim = animation.FuncAnimation(fig, update, frames=iter_max, interval=100, blit=True)
-        nome_ficheiro = f"video_anel_c1_{c1}_c2_{c2}.gif"
+        nome_ficheiro = f"video_gbest_c1_{c1}_c2_{c2}.gif"
         anim.save(nome_ficheiro, writer='pillow', fps=10)
-        plt.close(fig) # Fecha a figura para não consumir memória
+        plt.close(fig)  # Fecha a figura para liberar memória.
         print(f"✅ Vídeo guardado: {nome_ficheiro}")
 
 if __name__ == "__main__":
