@@ -18,13 +18,13 @@ class Particle:
         # Pontuação atual.
         self.score = float('inf')
 
-    def update_velocity(self, local_best_position, c1, c2, w=0.7):
+    def update_velocity(self, best_position, c1, c2, w=0.7):
         # Gera coeficientes aleatórios independentes para cada dimensão.
         r1 = np.random.uniform(0, 1, len(self.position))
         r2 = np.random.uniform(0, 1, len(self.position))
         
         cognitive_component = c1 * r1 * (self.best_position - self.position)
-        social_component = c2 * r2 * (local_best_position - self.position)
+        social_component = c2 * r2 * (best_position - self.position)
         
         # Atualização clássica da velocidade com inércia.
         self.velocity = (w * self.velocity) + cognitive_component + social_component
